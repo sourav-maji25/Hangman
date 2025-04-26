@@ -1,0 +1,130 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Hanken Grotesk", Arial, sans-serif;
+    background-color: #262626;
+    color: #D9D9D9;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header>h1 {
+    font-size: 1.25rem;
+    color: #F9F4DA;
+    font-weight: 500;
+}
+
+header>p {
+    font-size: 0.875rem;
+    color: #8E8E8E;
+    font-weight: 500;
+    width: 350px;
+    text-align: center;
+}
+
+section.game-status {
+    background-color: #10A95B;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px;
+    color: #F9F4DA;
+    margin-block: 30px;
+}
+
+section.game-status>p {
+    margin: 5px;
+}
+
+section.game-status>h2 {
+    font-size: 1.25rem;
+    margin: 5px;
+}
+
+section.languages {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 36px;
+    max-width: 350px;
+}
+
+section.languages>div {
+    border: none;
+    border-radius: 3px;
+    padding: 4.5px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+section.word {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-bottom: 20px;
+}
+
+section.word>span {
+    height: 40px;
+    width: 40px;
+    background-color: #323232;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #F9F4DA;
+    color: #F9F4DA;
+    font-size: 1.125rem;
+    padding: 6px;
+    border-radius: 3px;
+}
+
+section.keyboard {
+    max-width: 450px;
+    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+}
+
+section.keyboard>button {
+    height: 35px;
+    width: 35px;
+    background-color: #FCBA29;
+    border: 1px solid #D7D7D7;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+section.keyboard>button.correct {
+    background-color: #10A95B;
+}
+
+section.keyboard>button.wrong {
+    background-color: #E03C31;
+}
+
+.new-game {
+    background-color: #11B5E5;
+    width: 228px;
+    height: 40px;
+    border: 1px solid #D7D7D7;
+    border-radius: 3px;
+    padding: 6px 12px;
+    display: block;
+    margin: 0 auto;
+}
