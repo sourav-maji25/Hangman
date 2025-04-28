@@ -1,34 +1,73 @@
 import React from "react";
 import { languages } from "./languages";
 import { clsx } from "clsx";
+import gameWonSound from './sounds/win.mp3';
+import wrongGuessSound from './sounds/error.mp3';
+import correctGuessSound from './sounds/correct-ding.mp3';
+import gameLostSound from './sounds/lost-game-over.mp3';
+import newGameSound from './sounds/game-start.mp3';
+
 
 export default function AssemblyEndgame() {
-    const [currentWord, setCurrentWord] = React.useState("religionist");
+    const [currentWord, setCurrentWord] = React.useState("mercy");
     const [guessedLetters, setGuessedLetters] = React.useState([]);
 
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    // Preload audio instances
+    const correctAudio = React.useMemo(() => new Audio(correctGuessSound), []);
+    const wrongAudio = React.useMemo(() => new Audio(wrongGuessSound), []);
+    const winAudio = React.useMemo(() => new Audio(gameWonSound), []);
+    const loseAudio = React.useMemo(() => new Audio(gameLostSound), []);
+    const newGameAudio = React.useMemo(() => new Audio(newGameSound), []);
 
+    const wrongGuessCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length;
+    const isGameLost = wrongGuessCount >= languages.length - 1;
+    const isGameWon = !isGameLost && currentWord.split("").every(letter => guessedLetters.includes(letter));
+    const isGameOver = isGameLost || isGameWon;
+
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    const playSound = (soundFile) => {
+        const audio = new Audio(soundFile);
+        audio.play();
+    };
+
+
+    // function addGuessedLetter(letter) {
+    //     setGuessedLetters((prevLetters) => {
+    //         return prevLetters.includes(letter) ?
+    //             prevLetters :
+    //             [...prevLetters, letter];
+    //     });
+    // }
     function addGuessedLetter(letter) {
         setGuessedLetters((prevLetters) => {
-            return prevLetters.includes(letter) ?
-                prevLetters :
-                [...prevLetters, letter];
+            if (prevLetters.includes(letter)) return prevLetters;
+
+            // Play sounds based on correct or wrong guesses
+            if (currentWord.includes(letter)) {
+                correctAudio.play();
+            } else {
+                wrongAudio.play();
+            }
+
+            return [...prevLetters, letter];
         });
     }
 
-    const languageElements = languages.map((language) =>
-        <div key={language.name}
-            className="language"
-            style={{
-                backgroundColor: language.backgroundColor,
-                color: language.color
-            }}>
-            {language.name}
-        </div>
-    );
+    const languageElements = languages.map((language, index) => {
+        const isLanguageLost = index < wrongGuessCount;
+        const classname = clsx("chip", isLanguageLost && "lost");
 
-
-    const wrongGuesses = guessedLetters.filter(letter => !currentWord.includes(letter)).length;
+        return (
+            <span key={language.name}
+                className={classname}
+                style={{
+                    backgroundColor: language.backgroundColor,
+                    color: language.color
+                }}>
+                {language.name}
+            </span>
+        );
+    });
 
     const letters = currentWord.split("").map((letter, indx) => (
         <span key={indx} className="letter">
@@ -58,15 +97,40 @@ export default function AssemblyEndgame() {
         );
     });
 
+    const gameStatusClass = clsx("game-status", {
+        "won": isGameWon,
+        "lost": isGameLost,
+    });
+
+    React.useEffect(() => {
+        if (isGameWon) {
+            winAudio.play();
+        } else if (isGameOver) {
+            loseAudio.play();
+        }
+    }, [isGameWon, isGameOver, winAudio, loseAudio]);
+
     return (
         <main>
             <header>
                 <h1>Assembly: Endgame</h1>
                 <p>Guess the word in under 8 attempts to keep the programming world safe from Assembly!</p>
             </header>
-            <section className="game-status">
-                <h2>You win!</h2>
-                <p>Well done! 🎉</p>
+            <section className={gameStatusClass}>
+                {isGameOver ? (
+                    isGameWon ? (
+                        <>
+                            <h2>You win!</h2>
+                            <p> Well done! 🎉</p>
+                        </>
+                    ) : (
+                        <>
+                            <h2>Game over!</h2>
+                            <p>You lose! Better start learning Assembly 😭</p>
+                        </>
+                    ))
+                    : ""
+                }
             </section>
             <section className="languages">
                 {languageElements}
@@ -77,7 +141,7 @@ export default function AssemblyEndgame() {
             <section className="keyboard">
                 {alphabetLetters}
             </section>
-            <button className="new-game">New Game</button>
+            {isGameOver && <button className="new-game">New Game</button>}
         </main >
     );
 }
