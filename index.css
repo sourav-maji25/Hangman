@@ -13,6 +13,12 @@ body {
     justify-content: center;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 header {
     display: flex;
     flex-direction: column;
@@ -38,10 +44,11 @@ section.game-status {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* padding: 6px; */
     color: #F9F4DA;
     margin-block: 30px;
     min-height: 72px;
+    width: 100%;
+    max-width: 350px;
 }
 
 section.game-status.won {
@@ -103,7 +110,7 @@ section.word>span {
 
 section.keyboard {
     max-width: 450px;
-    gap: 12px;
+    gap: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

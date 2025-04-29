@@ -1,8 +1,10 @@
 import React from "react";
 import { languages } from "./languages";
 import { clsx } from "clsx";
+import { useWindowSize } from 'react-use';
+import Confetti from 'react-confetti';
 import gameWonSound from './sounds/win.mp3';
-import wrongGuessSound from './sounds/error.mp3';
+import wrongGuessSound from './sounds/error01.mp3';
 import correctGuessSound from './sounds/correct-ding.mp3';
 import gameLostSound from './sounds/lost-game-over.mp3';
 import newGameSound from './sounds/game-start.mp3';
@@ -11,6 +13,7 @@ import newGameSound from './sounds/game-start.mp3';
 export default function AssemblyEndgame() {
     const [currentWord, setCurrentWord] = React.useState("mercy");
     const [guessedLetters, setGuessedLetters] = React.useState([]);
+    const { width, height } = useWindowSize();
 
     // Preload audio instances
     const correctAudio = React.useMemo(() => new Audio(correctGuessSound), []);
@@ -25,19 +28,7 @@ export default function AssemblyEndgame() {
     const isGameOver = isGameLost || isGameWon;
 
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
-    const playSound = (soundFile) => {
-        const audio = new Audio(soundFile);
-        audio.play();
-    };
 
-
-    // function addGuessedLetter(letter) {
-    //     setGuessedLetters((prevLetters) => {
-    //         return prevLetters.includes(letter) ?
-    //             prevLetters :
-    //             [...prevLetters, letter];
-    //     });
-    // }
     function addGuessedLetter(letter) {
         setGuessedLetters((prevLetters) => {
             if (prevLetters.includes(letter)) return prevLetters;
@@ -51,6 +42,12 @@ export default function AssemblyEndgame() {
 
             return [...prevLetters, letter];
         });
+    }
+
+    function handleNewGame() {
+        setGuessedLetters([]);
+        setCurrentWord("mercy");
+        newGameAudio.play();
     }
 
     const languageElements = languages.map((language, index) => {
@@ -90,7 +87,7 @@ export default function AssemblyEndgame() {
                 key={indx}
                 onClick={() => addGuessedLetter(letter)}
                 className={className}
-                disabled={isGuessed}
+                disabled={isGuessed || isGameOver || isGameWon}
             >
                 {letter.toUpperCase()}
             </button>
@@ -112,6 +109,7 @@ export default function AssemblyEndgame() {
 
     return (
         <main>
+            {isGameWon && <Confetti width={width} height={height} />}
             <header>
                 <h1>Assembly: Endgame</h1>
                 <p>Guess the word in under 8 attempts to keep the programming world safe from Assembly!</p>
@@ -129,7 +127,7 @@ export default function AssemblyEndgame() {
                             <p>You lose! Better start learning Assembly 😭</p>
                         </>
                     ))
-                    : ""
+                    : null
                 }
             </section>
             <section className="languages">
@@ -141,7 +139,12 @@ export default function AssemblyEndgame() {
             <section className="keyboard">
                 {alphabetLetters}
             </section>
-            {isGameOver && <button className="new-game">New Game</button>}
+            {isGameOver &&
+                <button
+                    className="new-game"
+                    onClick={handleNewGame}
+                > New Game
+                </button>}
         </main >
     );
 }
