@@ -119,6 +119,10 @@ section.word>span {
     border-radius: 3px;
 }
 
+section.word>span.missed-letter {
+    color: #EC5D49;
+}
+
 section.keyboard {
     max-width: 450px;
     gap: 10px;

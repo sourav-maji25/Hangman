@@ -76,11 +76,17 @@ export default function AssemblyEndgame() {
         );
     });
 
-    const letters = currentWord.split("").map((letter, indx) => (
-        <span key={indx} className="letter">
-            {guessedLetters.includes(letter) ? letter.toUpperCase() : "_"}
-        </span>
-    ));
+    const letters = currentWord.split("").map((letter, indx) => {
+        const shouldRevealLetter = isGameLost || guessedLetters.includes(letter);
+        const letterClassName = clsx(
+            isGameLost && !guessedLetters.includes(letter) && "missed-letter"
+        );
+        return (
+            <span key={indx} className={letterClassName}>
+                {shouldRevealLetter ? letter.toUpperCase() : "_"}
+            </span>
+        );
+    });
 
     const alphabetLetters = alphabet.split("").map((letter, indx) => {
         const isGuessed = guessedLetters.includes(letter);
