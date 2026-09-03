@@ -157,7 +157,8 @@ export default function AssemblyEndgame() {
 
     return (
         <main>
-            {isGameWon && <Confetti width={width} height={height} />}
+            {isGameWon && <Confetti width={width} height={height} recycle={false}
+                numberOfPieces={3500} />}
             <header>
                 <h1>Assembly: Endgame</h1>
                 <p>Guess the word in under 8 attempts to keep the programming world safe from Assembly!</p>
